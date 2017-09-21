@@ -15,7 +15,7 @@ Add these lines to your build.sbt and you should be set:
 
 > resolvers += "se.chimps.fuckjs" at "http://yamr.kodiak.se/maven"
 
-> libraryDependencies += "se.chimps.fuckjs" %%% "fuck-js" % "Beta1"
+> libraryDependencies += "se.chimps.fuckjs" %%% "fuckjs" % "Beta2"
 
 
 ## Fuck.js terminology
