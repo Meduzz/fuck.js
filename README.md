@@ -11,7 +11,7 @@ Here you get bits of all three in one of the most beautiful languages out there.
 
 ## Get started
 
-Add these lines to your build.sbt and you should be set:
+Add these lines to scala.js part of your build.sbt and you should be set:
 
 > resolvers += "se.chimps.fuckjs" at "http://yamr.kodiak.se/maven"
 
@@ -20,9 +20,9 @@ Add these lines to your build.sbt and you should be set:
 
 ## Fuck.js terminology
 
-    Mutation = Event from DOM.eventHandler or other component. Think case classes.
+    Mutation = Event from DOM.eventHandler or other component. Think case classes mutating your state.
     Component = Big chunk of html, the state you need and the logic to make it live
-    Action = Can be both an event, or an command to mount a component or both.
+    Action = Can be both an event, or an command to mount a component or both. Emitted by your route settings.
     Router = A Router, with a twist.
 
 ## The moving parts
