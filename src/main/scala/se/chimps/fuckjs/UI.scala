@@ -6,20 +6,20 @@ import scala.scalajs.js.annotation.JSExportAll
 
 @JSExportAll
 object UI {
-	var componentRegister:Map[String, Component] = Map()
+	var mountedComponentRegister:Map[String, Component] = Map()
 	var globalMutationHandlers:Seq[PartialFunction[Mutation, Unit]] = Seq()
 
 	def mount(component: Component, selector:String):Unit = {
 		component.register(selector)
-		componentRegister = componentRegister ++ Map(selector -> component)
+		mountedComponentRegister = mountedComponentRegister ++ Map(selector -> component)
 		render(selector)
 	}
 
-	def componentFor(selector:String):Option[Component] = componentRegister.get(selector)
+	def componentFor(selector:String):Option[Component] = mountedComponentRegister.get(selector)
 
 	def render(id:String):Unit = {
-		if (componentRegister.contains(id)) {
-			val component = componentRegister(id)
+		if (mountedComponentRegister.contains(id)) {
+			val component = mountedComponentRegister(id)
 			val tag = component.view()
 
 			if (!tag.isEqualNode(document.querySelector(id))) {

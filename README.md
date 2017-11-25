@@ -57,6 +57,10 @@ Update is a method that you can use everywhere when you want the framework to re
 There 2 versions of this function, the are both helper functions that makes it easier to trigger eventhandling in your DOM and back to your component with the Mutations you've defined.
 The second version of this function, lets you create a mutation from the raw event, so you can dig out data from it if needed.
 
+### Virtual Dom
+
+If you also extend VDomSupport your component will use vdom. That means that you get a new view() method to implement, access to hyperscript etc. And the framework will stopp remounting your component when ever you call update().
+
 ### [Mutation](se/chimps/fuckjs/Mutation.scala)
 
 Pretty much anything that changes the state of the component will inherit from this trait. Think case classes extending this trait, no biggie.
@@ -94,14 +98,14 @@ First mount c, then trigger m on that component.
 - [ ] Add rant about modern frontend development.
 - [x] Add examples. See [Todo example](https://github.com/Meduzz/fuck.js-todo-example)
 - [ ] Add tests. I was bummed when I could not use my standard scala goto test-tool tbh!
-- [ ] Find/Build a hyperscript &/| pug template thingie to use with views, scalatags are way to tedious to use.
+- [x] Find/Build a hyperscript &/| pug template thingie to use with views, scalatags are way to tedious to use.
 - [ ] The current way of remounting tags, prolly leaks memory in terms of eventHandlers that never unsubscribed, this should be investigated.
 - [ ] Find a better way to rip data from inputfields, into events THEY trigger. To be used with Component.trigger methods.
-- [ ] Get some kind of vdom solution, so we dont have to repaint all of the components on update().
+- [x] Get some kind of vdom solution, so we dont have to repaint all of the components on update().
 
 ## Current drawbacks.
 
-1. Templates ie. view:Node in components are tedious to setup and design.
+1. Templates ie. view:Node in components are tedious to setup and design (improved by the vdom feature).
 2. Callbacks from DOM into component does not have a good way to dig out the relevant data, instead you kind of have to listen onkeyup and wait for a keyCode == 13 and then querySelector the value.
 3. No tests! Oo until I find time to invest in a test-tool for this...
-4. Repainting a component, means repainting ALL of the components html. Should get better with a vdom.
+4. Repainting a component, means repainting ALL of the components html (improved by the vdom feature).
