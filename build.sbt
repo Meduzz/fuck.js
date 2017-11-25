@@ -8,11 +8,11 @@ organization := "se.chimps.js"
 
 credentials += Credentials(Path.userHome / ".ivy2" / ".fuckjs")
 
-publishTo := Some("se.chimps.js" at "http://yamr.kodiak.se/maven")
+publishTo := Some("se.chimps.js" at "https://yamr.kodiak.se/maven")
 
 publishArtifact in (Compile, packageDoc) := false
 
-resolvers += "se.chimps.js" at "http://yamr.kodiak.se/maven"
+resolvers += "se.chimps.js" at "https://yamr.kodiak.se/maven"
 
 scalaVersion := "2.12.1"
 
