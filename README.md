@@ -59,7 +59,7 @@ The second version of this function, lets you create a mutation from the raw eve
 
 ### Virtual Dom
 
-If you also extend VDomSupport your component will use vdom. That means that you get a new view() method to implement, access to hyperscript etc. And the framework will stopp remounting your component when ever you call update().
+If you also extend VDomSupport your component will use vdom. That means that you get a new view() method to implement. If you also extends HFunc, you get access to hyperscript etc. That can also be achieved by importing ```se.chimps.js.vdom.hypertext.Explicits._```, which let you start of with simple strings and turn them into tags. And the framework will stopp remounting your component when ever you call update().
 
 ### [Mutation](se/chimps/fuckjs/Mutation.scala)
 

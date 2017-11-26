@@ -10,12 +10,12 @@ trait Component extends MutationHandler {
 	// call UI and ask it to repaint ourselfes.
 	def update():Unit = UI.render(tagSelector)
 	def view():Node
-	def trigger[T <: Event](m:Mutation):Function1[T, Unit] = {(e) => {
+	def trigger[T <: Event](m:Mutation):Function1[T, Unit] = {e:T => {
 		if (handle(m)) {
 			update()
 		}
 	}}
-	def trigger[T <: Event](map:(T) => Mutation):Function1[T, Unit] = {(e) => {
+	def trigger[T <: Event](map:(T) => Mutation):Function1[T, Unit] = {e:T => {
 		if (handle(map(e))) {
 			update()
 		}
