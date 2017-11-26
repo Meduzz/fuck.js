@@ -18,6 +18,8 @@ trait VDomSupport extends VDom with VDiff { parent:Component =>
 			root = renderTag(tag)
 		}
 
+		shadow = tag
+
 		root
 	}
 
