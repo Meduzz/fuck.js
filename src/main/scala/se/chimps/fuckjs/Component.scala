@@ -2,22 +2,24 @@ package se.chimps.fuckjs
 
 import org.scalajs.dom.raw.{Event, Node}
 
-trait Component extends MutationHandler {
-	private var tagSelector:String = _
+trait Component {
+	private var render:(Node)=>Unit = null
 
-	def register(id:String):Unit = this.tagSelector = id
+	private[fuckjs] def setup(render:(Node)=>Unit):Unit = {
+		this.render = render
+		update()
+	}
 
-	// call UI and ask it to repaint ourselfes.
-	def update():Unit = UI.render(tagSelector)
+	def handle:PartialFunction[Mutation, Unit]
 	def view():Node
+
+	def update():Unit = render(view())
+
 	def trigger[T <: Event](m:Mutation):Function1[T, Unit] = {e:T => {
-		if (handle(m)) {
-			update()
-		}
+		handle(m)
 	}}
+
 	def trigger[T <: Event](map:(T) => Mutation):Function1[T, Unit] = {e:T => {
-		if (handle(map(e))) {
-			update()
-		}
+		handle(map(e))
 	}}
 }

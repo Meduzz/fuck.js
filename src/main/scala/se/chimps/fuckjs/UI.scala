@@ -1,39 +1,40 @@
 package se.chimps.fuckjs
 
-import org.scalajs.dom.document
+import org.scalajs.dom.{HashChangeEvent, document, window}
+import org.scalajs.dom.raw.Node
 
 import scala.scalajs.js.annotation.JSExportAll
 
 @JSExportAll
 object UI {
-	var mountedComponentRegister:Map[String, Component] = Map()
 	var globalMutationHandlers:Seq[PartialFunction[Mutation, Unit]] = Seq()
 
 	def mount(component: Component, selector:String):Unit = {
-		component.register(selector)
-		mountedComponentRegister = mountedComponentRegister ++ Map(selector -> component)
-		render(selector)
+		component.setup(renderer(selector))
+		globalMutationHandlers = globalMutationHandlers ++ Seq(component.handle)
 	}
 
-	def componentFor(selector:String):Option[Component] = mountedComponentRegister.get(selector)
-
-	def render(id:String):Unit = {
-		if (mountedComponentRegister.contains(id)) {
-			val component = mountedComponentRegister(id)
-			val tag = component.view()
-
-			if (!tag.isEqualNode(document.querySelector(id))) {
-				document.querySelector(id).innerHTML = ""
-				document.querySelector(id).appendChild(tag)
-			}
+	private[fuckjs] def renderer(selector:String):(Node => Unit) = { node =>
+		if (!node.isEqualNode(document.querySelector(selector))) {
+			document.querySelector(selector).innerHTML = ""
+			document.querySelector(selector).appendChild(node)
 		}
 	}
 
-	def trigger(any:Mutation):Unit = {
-		globalMutationHandlers.filter(h => h.isDefinedAt(any)).foreach(h => h(any))
+	def trigger(mutation:Mutation):Unit = {
+		globalMutationHandlers
+			.filter(h => h.isDefinedAt(mutation))
+			.foreach(h => h(mutation))
 	}
 
-	def on(handler:PartialFunction[Mutation, Unit]):Unit = globalMutationHandlers = globalMutationHandlers ++ Seq(handler)
+	def routing(routingFunc:(HashChangeEvent) => Navigation):Unit = {
+		window.addEventListener("hashchange", (e:HashChangeEvent) => {
+			val nav = routingFunc(e)
 
-	def route(selector:String):Router = Router(selector)
+			globalMutationHandlers
+				.filter(h => h.isDefinedAt(nav))
+				.foreach(h => h(nav))
+		})
+	}
 }
+

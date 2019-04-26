@@ -2,7 +2,7 @@ enablePlugins(ScalaJSPlugin)
 
 name := "fuckjs"
 
-version := "Beta3.4"
+version := "Beta4"
 
 organization := "se.chimps.js"
 
@@ -14,10 +14,8 @@ publishArtifact in (Compile, packageDoc) := false
 
 resolvers += "se.chimps.js" at "https://yamr.kodiak.se/maven"
 
-scalaVersion := "2.12.1"
+scalaVersion := "2.12.6"
 
 scalaJSUseMainModuleInitializer := false
 
 libraryDependencies += "org.scala-js" %%% "scalajs-dom" % "0.9.1"
-
-libraryDependencies += "se.chimps.js" %%% "icanhazdom" % "20171126"
