@@ -2,7 +2,7 @@ enablePlugins(ScalaJSPlugin)
 
 name := "fuckjs"
 
-version := "Beta4"
+version := "Beta5"
 
 organization := "se.chimps.js"
 
