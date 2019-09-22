@@ -2,7 +2,7 @@ enablePlugins(ScalaJSPlugin)
 
 name := "fuckjs"
 
-version := "Beta5"
+version := "Beta6"
 
 organization := "se.chimps.js"
 
@@ -18,4 +18,4 @@ scalaVersion := "2.12.6"
 
 scalaJSUseMainModuleInitializer := false
 
-libraryDependencies += "org.scala-js" %%% "scalajs-dom" % "0.9.1"
+libraryDependencies += "org.scala-js" %%% "scalajs-dom" % "0.9.7"

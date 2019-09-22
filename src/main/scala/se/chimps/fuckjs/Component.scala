@@ -1,8 +1,9 @@
 package se.chimps.fuckjs
 
-import org.scalajs.dom.raw.{Event, Node}
+import org.scalajs.dom.raw.Node
+import se.chimps.fuckjs.html.{Attributes, RealTag, Tags}
 
-trait Component {
+trait Component extends Tags with Attributes {
 	private var render:Node => Unit = _
 	private var parent:Component = _
 
@@ -11,26 +12,24 @@ trait Component {
 		update()
 	}
 
-	def subComponentOf(p:Component):Unit = this.parent = p
-
-	def handle:PartialFunction[Mutation, Unit]
-	def view():Node
-
-	def update():Unit = {
-		if (render != null) {
-			render(view())
-		} else if (parent != null) {
-			parent.update()
-		} else {
-			println(s"[${this.getClass.getSimpleName}] Nor renderer or parent are set.")
-		}
+	private[fuckjs] def parent(parent:Component):Unit = {
+		this.parent = parent
 	}
 
-	def trigger[T <: Event](m:Mutation):Function1[T, Unit] = { e:T => {
-		handle(m)
-	}}
+	def view():RealTag
 
-	def trigger[T <: Event](map:T => Mutation):Function1[T, Unit] = { e:T => {
-		handle(map(e))
-	}}
+	def subcomponent(component:Component):RealTag = {
+		component.parent(this)
+		component.view()
+	}
+
+	def update():Unit = {
+		if (parent != null) {
+			parent.update()
+		} else if (render != null) {
+			render(view().render())
+		} else {
+			println(s"[${this.getClass.getSimpleName}] No renderer are set.")
+		}
+	}
 }

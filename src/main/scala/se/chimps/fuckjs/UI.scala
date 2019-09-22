@@ -1,7 +1,7 @@
 package se.chimps.fuckjs
 
-import org.scalajs.dom.{HashChangeEvent, document, window}
 import org.scalajs.dom.raw.Node
+import org.scalajs.dom.{HashChangeEvent, document, window}
 
 import scala.scalajs.js.annotation.JSExportAll
 
@@ -9,9 +9,16 @@ import scala.scalajs.js.annotation.JSExportAll
 object UI {
 	private var globalMutationHandlers:Seq[PartialFunction[Mutation, Unit]] = Seq()
 
-	def mount(component: Component, selector:String):Unit = {
-		component.setup(renderer(selector))
-		globalMutationHandlers = globalMutationHandlers ++ Seq(component.handle)
+	def register(component:Component, selector:String = null):Unit = {
+		if (selector != null) {
+			component.setup(renderer(selector))
+		}
+
+		component match {
+			case eventHandler:EventHandler =>
+				globalMutationHandlers = globalMutationHandlers ++ Seq(eventHandler.handle)
+			case _ =>
+		}
 	}
 
 	private[fuckjs] def renderer(selector:String):Node => Unit = { node =>
@@ -27,7 +34,7 @@ object UI {
 			.foreach(h => h(mutation))
 	}
 
-	def routing(routingFunc:HashChangeEvent => Navigation):Unit = {
+	def routing(routingFunc:HashChangeEvent => Mutation):Unit = {
 		window.addEventListener("hashchange", (e:HashChangeEvent) => {
 			val nav = routingFunc(e)
 
