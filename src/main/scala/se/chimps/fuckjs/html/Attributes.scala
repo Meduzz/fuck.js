@@ -3,7 +3,7 @@ package se.chimps.fuckjs.html
 import org.scalajs.dom.raw.Event
 
 trait Attributes {
-	def on(action:String, handler:Event => Unit):Attribute = EventAttribute(action, handler)
+	def on[T <: Event](action:String, handler:T => Unit):Attribute = EventAttribute(action, handler)
 	def attribute(key:String, value:String):Attribute = TextAttribute(key, value)
 	def href(url:String):Attribute = attribute("href", url)
 	def value(value:String):Attribute = attribute("value", value)

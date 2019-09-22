@@ -1,7 +1,7 @@
 package se.chimps.fuckjs.html
 
-import org.scalajs.dom
 import org.scalajs.dom.Element
+import org.scalajs.dom.raw.Event
 
 trait Attribute {
 	def render(e:Element):Unit
@@ -12,6 +12,6 @@ trait Attribute {
 case class TextAttribute(key:String, value:String) extends Attribute {
 	override def render(e:Element):Unit = e.setAttribute(key, value)
 }
-case class EventAttribute(on:String, evt:dom.raw.Event => Unit) extends Attribute {
+case class EventAttribute[T <: Event](on:String, evt:T => Unit) extends Attribute {
 	override def render(e:Element):Unit = e.addEventListener(on, evt)
 }

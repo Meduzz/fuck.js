@@ -15,7 +15,7 @@ Add these lines to scala.js part of your build.sbt and you should be set:
 
 > resolvers += "se.chimps.fuckjs" at "http://yamr.kodiak.se/maven"
 
-> libraryDependencies += "se.chimps.fuckjs" %%% "fuckjs" % "Beta5"
+> libraryDependencies += "se.chimps.fuckjs" %%% "fuckjs" % "Beta6.1"
 
 
 ## Fuck.js terminology
@@ -47,7 +47,7 @@ The view() method lets you design this components part of the dom. You are now f
 #### update():Unit
 Update is a method that you can use everywhere when you want the framework to refresh the DOM.
 
-#### subcomponent(parent:Component):RealTag
+#### subcomponent(child:Component):RealTag
 This method lets you compose components, and even a long chain of components will update correctly. Keep in mind though that it is the top most parent that is actually rerendering at the end of an update() chain.
 
 ### [EventHandler](se/chimps/fuckjs/EventHandler.scala)
@@ -104,6 +104,10 @@ There are 2 types of attributes, EventAttributes to listen to events. And TextAt
 #### TextAttribute
 
 A textAttribute would be id="asdf" or value="asdf", there are shortcuts for a couple of these in the Attributes trait. But there's also a method to generate anything you might need in there through `attribute(key:String, value:String):Attribute`
+
+#### EventAttribute
+
+The other type of attribute is for events, like onclick. It combines the `on("click", trigger(Click))` method with the trigger method of the EventHandler trait.
 
 ## Example
 
