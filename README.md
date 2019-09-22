@@ -35,24 +35,31 @@ You will most likely only come in contact with this class in your main, or if yo
 
 This trait is the base of the framework and hides a chunk of the framework logic. 
 The state of the component are what you make it.
-Each component you create will have to extend this trait. There are 2 methods you must implement.
+Each component you create will have to extend this trait. There are only one method you must implement.
 ```scala
-  def view():Node
-  def handle:PartialFunction[Mutation, Unit]
+  def view():RealTag
 ```
 The latter are actually inherited from MutationHandler which can be a base for components that does not require an UI.
 
-#### view():Node
-The view() method lets you design this components part of the dom. You can use anything that can generate scala-js-dom Nodes.
-
-#### handle:PartialFunction[Mutation, Unit]
-The handle partial function, will be called with all mutations you trigger. When you handle said mutations, you decide if the DOM need an update or not.
+#### view():RealTag
+The view() method lets you design this components part of the dom. You are now forced to use the inhouse html generating capabilities. Dont worry, it's flexible.
 
 #### update():Unit
 Update is a method that you can use everywhere when you want the framework to refresh the DOM.
 
-#### subComponentOf(parent:Component):Unit
+#### subcomponent(parent:Component):RealTag
 This method lets you compose components, and even a long chain of components will update correctly. Keep in mind though that it is the top most parent that is actually rerendering at the end of an update() chain.
+
+### [EventHandler](se/chimps/fuckjs/EventHandler.scala)
+
+To make your component act on stuff you also need to implement the EventHandler trait. This trait also gives you access to the trigger methods, which lets you act on actions in the page itself.
+
+````scala
+  def handle:PartialFunction[Mutation, Unit]
+````
+
+#### handle:PartialFunction[Mutation, Unit]
+The handle partial function, will be called with all mutations you trigger. When you handle said mutations, you decide if the DOM need an update or not.
 
 #### trigger(mutation:Mutation):Function[Event, Unit]
 There 2 versions of this function, the are both helper functions that makes it easier to trigger eventhandling in your DOM and back to your component with the Mutations you've defined.
@@ -61,6 +68,42 @@ The second version of this function, lets you create a mutation from the raw eve
 ### [Mutation](se/chimps/fuckjs/Mutation.scala)
 
 Pretty much anything that changes the state of the component will inherit from this trait. Think case classes extending this trait, no biggie.
+
+## Generating html
+
+The `Component` trait extends [Tags](se/chimps/fuckjs/html/Tags.scala) and [Attributes](se/chimps/fuckjs/html/Attributes.scala) traits, that give you instant access to the most common tags and attributes. But if you miss a tag or an attribute, it's no biggie to add it.
+
+### Tags
+
+At the base of generating html tags, are the Tag trait. There are 2 implementations of that trait, RealTag and TextTag. The code will look something like this:
+
+```scala
+  div()(
+    ul()(
+      li()(
+        a(href("#/red"))(text("red"))
+      ),li()(
+        a(href("#/blue"))(text("blue"))
+      )
+    ),subcomponent(nav)
+  )
+```
+
+#### RealTag
+
+RealTag is a representation of a tag, like a div, p etc. It can have attributes, and it can have children. There are shorthand methods for a couple of the most common tags in the Tags trait. But there is also a method to generate any tags missing through the `tag(name:String, attributes:Seq[Attribute], children:Seq[Tag]):RealTag` method.
+
+#### TextTag
+
+TextTag is a placeholder that holds text. If the framework discovers a TextTag, it will put the text in the parents textContent during render.
+
+### Attributes
+
+There are 2 types of attributes, EventAttributes to listen to events. And TextAttributes for everything else.
+
+#### TextAttribute
+
+A textAttribute would be id="asdf" or value="asdf", there are shortcuts for a couple of these in the Attributes trait. But there's also a method to generate anything you might need in there through `attribute(key:String, value:String):Attribute`
 
 ## Example
 
@@ -72,10 +115,9 @@ Pretty much anything that changes the state of the component will inherit from t
 - [x] Add examples. See [Todo example](https://github.com/Meduzz/fuck.js-todo-example)
 - [ ] Add tests. I was bummed when I could not use my standard scala goto test-tool tbh!
 - [ ] The current way of remounting tags, prolly leaks memory in terms of eventHandlers that never unsubscribed, this should be investigated.
-- [ ] Find a better way to rip data from input fields, into events THEY trigger (ie bindings). To be used with Component.trigger methods.
+- [x] Find a better way to rip data from input fields, into events THEY trigger (ie bindings). To be used with Component.trigger methods.
 
 ## Current drawbacks.
 
-1. Callbacks from DOM into component does not have a good way to dig out the relevant data, instead you kind of have to listen onkeyup and wait for a keyCode == 13 and then querySelector the value.
-2. No tests! Oo until I find time to invest in a test-tool for this...
-3. You can only make components.
+1. No tests! Oo until I find time to invest in a test-tool for this...
+2. You can only make components.
